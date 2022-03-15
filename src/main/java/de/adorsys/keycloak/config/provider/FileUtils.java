@@ -99,7 +99,7 @@ final class FileUtils {
         File relativeFile = relativize(file);
         relativeFile = relativeFile.getParentFile();
         while (relativeFile != null) {
-            if (relativeFile.isHidden()) {
+            if (!"..".equals(relativeFile.getName()) && relativeFile.isHidden()) {
                 return true;
             }
 
