@@ -5,8 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Notes
+
+A lot of import properties are added over the years. this major release of keycloak will reorder all properties. You will find a translation table below.
+
 ### Added
-- Support for managing fine grained authorization rules with placeholders to reference identity providers by alias, realm role by name and groups by full path
+
+- Support for managing fine-grained authorization rules with placeholders to reference identity providers by alias, realm role by name and groups by full path
+
+### Changed
+
+- Refactored import properties.
+    - `import.force=true` -> `import.cache.enabled=false`
+    - `import.cache-key` -> `import.cache.key`
+    - `import.path` -> `import.files.locations`
+    - `import.hidden-files` -> `import.files.include-hidden-files`
+    - `import.file-type` -> removed
+    - `import.state` -> `import.remote-state.enabled`
+    - `import.state-encryption-key` -> `import.remote-state.encryption-key`
+    - `import.state-encryption-salt` -> `import.remote-state.encryption-salt`
+    - `import.var-substitution` -> `import.var-substitution.enabled`
+    - `import.var-substitution-in-variables` -> `import.var-substitution.nested`
+    - `import.var-substitution-undefined-throws-exceptions` -> `import.var-substitution.undefined-is-error`
+    - `import.var-substitution-prefix` -> `import.var-substitution.prefix`
+    - `import.var-substitution-suffix` -> `import.var-substitution.suffix`
+    - `import.remove-default-role-from-user` -> `import.behaviors.remove-default-role-from-user`
+    - `import.skip-attributes-for-federated-user` -> `import.behaviors.skip-attributes-for-federated-user`
+    - `import.sync-user-federation` -> `import.behaviors.sync-user-federation`
+- Changed loading of directories
+    - `path/to/dir` -> `path/to/dir/*`
+- Changed loading of zip files
+    - `path/to/file.zip` -> `zip:file:path/to/file.zip!**/*`
+
+### Removed
+
+- Support for Java 8
+- `customImport` property in json import.
+- Directory import. Use `dir/*` instead `dir/`
+- Support for zip files from http locations
+- `import.file-type`. Import files will always be pared with YAML parser. JSON files are YAML compatible.
 
 ## [4.8.1] - 2022-03-09
 
