@@ -22,6 +22,7 @@ package de.adorsys.keycloak.config.provider;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -33,14 +34,18 @@ final class FileUtils {
     static final Path CWD = Paths.get(System.getProperty("user.dir"));
 
     public static boolean hasHiddenAncestorDirectory(File file) {
-        File relativeFile = relativize(file.getAbsoluteFile());
-        relativeFile = relativeFile.getParentFile();
-        while (relativeFile != null) {
-            if (relativeFile.isHidden()) {
-                return true;
-            }
-
+        try {
+            File relativeFile = relativize(file.getCanonicalFile());
             relativeFile = relativeFile.getParentFile();
+            while (relativeFile != null) {
+                if (relativeFile.isHidden()) {
+                    return true;
+                }
+
+                relativeFile = relativeFile.getParentFile();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error getting canonical file " + file.getAbsoluteFile());
         }
         return false;
     }
