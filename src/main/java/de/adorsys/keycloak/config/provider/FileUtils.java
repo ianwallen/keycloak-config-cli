@@ -34,9 +34,10 @@ final class FileUtils {
 
     public static boolean hasHiddenAncestorDirectory(File file) {
         File relativeFile = relativize(file.getAbsoluteFile());
-        relativeFile = relativeFile.getParentFile();
+        // Ensure that ../ and ./ are removed from the path using normalize() otherwise these special cases will be detected as hidden folders.
+        relativeFile = relativeFile.getParentFile().toPath().toAbsolutePath().normalize().toFile();
         while (relativeFile != null) {
-            if (relativeFile.isHidden() && !relativeFile.getName().equals(".") && !relativeFile.getName().equals("..")) {
+            if (relativeFile.isHidden()) {
                 return true;
             }
 
